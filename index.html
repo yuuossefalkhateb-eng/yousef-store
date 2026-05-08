@@ -5,28 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر يـ,ـۅسـ,ـفـ,ـ 𝐾ℎ_7</title>
     <style>
-        :root { --gold: #ffb100; --glass: rgba(15, 23, 42, 0.95); --red: #e74c3c; }
+        :root { --gold: #ffb100; --glass: rgba(15, 23, 42, 0.95); --red: #e74c3c; --green: #2ecc71; }
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background: url('https://wallpaperaccess.com/full/1155026.jpg') no-repeat center center fixed; 
             background-size: cover; color: white; text-align: center; margin: 0; min-height: 100vh; 
         }
         body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: -1; }
-        .page { display: none; padding: 20px; animation: fadeIn 0.4s; }
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card { background: var(--glass); padding: 25px; border-radius: 20px; margin: 15px auto; max-width: 380px; border: 1px solid rgba(255, 177, 0, 0.3); backdrop-filter: blur(15px); }
-        input, select { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; background: rgba(0,0,0,0.6); color: white; border: 1px solid var(--gold); text-align: center; }
-        .btn { color: black; padding: 12px 20px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
-        .main-btn { background: linear-gradient(45deg, #ffb100, #ff8c00); width: 100%; margin-top: 10px; }
-        .header { background: rgba(10,14,20,0.95); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
-        .tab-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .tab-btn { background: #1e293b; color: white; flex: 1; padding: 15px; border-radius: 12px; border: 1px solid var(--gold); cursor: pointer; font-size: 14px; }
-        .tab-btn.active-tab { background: var(--gold); color: black; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .item { background: rgba(30, 41, 59, 0.7); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .logout-btn { background: var(--red); color: white; padding: 5px 10px; font-size: 12px; border-radius: 5px; }
-        .admin-img { max-width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; border: 1px solid var(--gold); }
+        .card { background: var(--glass); padding: 20px; border-radius: 15px; margin: 10px auto; max-width: 380px; border: 1px solid rgba(255, 177, 0, 0.2); backdrop-filter: blur(10px); }
+        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 10px; background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--gold); text-align: center; }
+        .btn { color: black; padding: 10px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
+        .main-btn { background: linear-gradient(45deg, #ffb100, #ff8c00); width: 100%; margin-top: 5px; }
+        .header { background: rgba(10,14,20,0.95); padding: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .nav-bar { display: flex; background: rgba(0,0,0,0.8); position: fixed; bottom: 0; width: 100%; border-top: 1px solid var(--gold); padding: 10px 0; }
+        .nav-item { flex: 1; color: white; font-size: 12px; cursor: pointer; }
+        .nav-item.active-nav { color: var(--gold); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .item { background: rgba(30, 41, 59, 0.6); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .status-badge { padding: 2px 8px; border-radius: 5px; font-size: 10px; }
+        .pending { background: #f1c40f; color: black; }
+        .done { background: var(--green); color: white; }
+        .rejected { background: var(--red); color: white; }
+        .admin-img { width: 100%; border-radius: 8px; margin: 5px 0; }
     </style>
 </head>
 <body>
@@ -38,67 +41,80 @@
             <input type="text" id="u" placeholder="اسم المستخدم">
             <input type="password" id="p" placeholder="كلمة السر">
             <button class="btn main-btn" onclick="handleAuth('login')">دخول</button>
-            <p style="font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">ليس لديك حساب؟ <span style="color: var(--gold); cursor: pointer;">إنشاء حساب</span></p>
+            <p onclick="toggleAuth(false)" style="font-size:12px; cursor:pointer;">ليس لديك حساب؟ إنشاء حساب</p>
         </div>
         <div class="card" id="registerBox" style="display: none;">
-            <h3>إنشاء حساب جديد</h3>
+            <h3>حساب جديد</h3>
             <input type="text" id="ru" placeholder="اسم المستخدم">
             <input type="password" id="rp" placeholder="كلمة السر">
-            <button class="btn main-btn" style="background: #2ecc71;" onclick="handleAuth('reg')">تأكيد الإنشاء</button>
-            <p style="font-size: 13px; margin-top: 15px;" onclick="toggleAuth(true)">لديك حساب؟ <span style="color: var(--gold); cursor: pointer;">دخول</span></p>
+            <button class="btn main-btn" style="background:var(--green);" onclick="handleAuth('reg')">تأكيد التسجيل</button>
+            <p onclick="toggleAuth(true)" style="font-size:12px; cursor:pointer;">لديك حساب؟ دخول</p>
         </div>
     </div>
 
-    <div id="shopPage" class="page" style="padding:0;">
+    <div id="shopPage" class="page" style="padding-bottom: 80px;">
         <div class="header">
-            <div>👤 <span id="curUser"></span> <button class="logout-btn" onclick="logout()">خروج</button></div>
-            <div style="text-align: left;"><span style="color:#2ecc71; font-weight:bold;"><span id="balance">0</span> ل.س</span><br>
-            <button onclick="showPage('rechargePage')" style="background:none; border:none; color:var(--gold); font-size: 11px;">+ شحن رصيد</button></div>
+            <div>👤 <span id="curUser"></span> <button onclick="logout()" style="background:var(--red); color:white; border:none; padding:2px 5px; border-radius:4px; font-size:9px;">خروج</button></div>
+            <div style="text-align: left;"><span style="color:var(--green); font-weight:bold;"><span id="balance">0</span> ل.س</span></div>
         </div>
-        <div style="padding: 20px;">
-            <div class="tab-container">
-                <button id="pubgTab" class="tab-btn active-tab" onclick="switchGame('pubg')">PUBG Mobile</button>
-                <button id="ffTab" class="tab-btn" onclick="switchGame('ff')">Free Fire</button>
+        <div style="padding: 15px;">
+            <div style="display:flex; gap:8px; margin-bottom:15px;">
+                <button id="pTab" class="btn" style="flex:1; background:var(--gold);" onclick="switchGame('pubg')">PUBG</button>
+                <button id="fTab" class="btn" style="flex:1; background:#1e293b; color:white;" onclick="switchGame('ff')">Free Fire</button>
             </div>
-            <div id="pubgSection" class="game-section grid">
+            <div id="pubgSection" class="grid">
                 <div class="item"><h4>60 UC</h4><p id="price-60">...</p><button class="btn main-btn" onclick="processPurchase('60 UC', 'price-60')">شراء</button></div>
                 <div class="item"><h4>325 UC</h4><p id="price-325">...</p><button class="btn main-btn" onclick="processPurchase('325 UC', 'price-325')">شراء</button></div>
                 <div class="item"><h4>660 UC</h4><p id="price-660">...</p><button class="btn main-btn" onclick="processPurchase('660 UC', 'price-660')">شراء</button></div>
                 <div class="item"><h4>1800 UC</h4><p id="price-1800">...</p><button class="btn main-btn" onclick="processPurchase('1800 UC', 'price-1800')">شراء</button></div>
             </div>
-            <div id="ffSection" class="game-section grid" style="display: none;">
+            <div id="ffSection" class="grid" style="display:none;">
                 <div class="item"><h4>110 جواهر</h4><p id="price-110ff">...</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('110 FF', 'price-110ff')">شراء</button></div>
                 <div class="item"><h4>220 جواهر</h4><p id="price-220ff">...</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('220 FF', 'price-220ff')">شراء</button></div>
             </div>
-            <p onclick="checkAdmin()" style="margin-top:40px; font-size:10px; opacity:0.3; cursor:pointer;">⚙️ لوحة التحكم</p>
+            <p onclick="checkAdmin()" style="margin-top:40px; font-size:10px; opacity:0.2;">⚙️ الإدارة</p>
         </div>
     </div>
 
-    <div id="rechargePage" class="page">
+    <div id="ordersPage" class="page" style="padding-bottom: 80px;">
+        <h3>📦 سجل طلباتي</h3>
+        <div id="userOrdersList"></div>
+    </div>
+
+    <div id="rechargePage" class="page" style="padding-bottom: 80px;">
         <div class="card">
-            <h3>تعبئة الرصيد 💰</h3>
-            <p style="font-size: 12px; color: #ccc;">حول المبلغ للرقم الموضح وصور الإشعار</p>
-            <img src="https://i.imgur.com/R9D6DsJ.jpeg" alt="QR" style="max-width:150px; border-radius:10px; margin-bottom:10px;">
-            <input type="number" id="amt" placeholder="المبلغ المحول">
-            <label style="display: block; margin-top: 10px; font-size: 13px;">ارفق صورة الإشعار:</label>
-            <input type="file" id="receiptImg" accept="image/*" style="font-size: 12px;">
-            <button class="btn main-btn" id="uploadBtn" onclick="requestDeposit()">إرسال طلب الشحن</button>
-            <button class="btn" style="background:none; color:white; margin-top:10px;" onclick="showPage('shopPage')">إلغاء</button>
+            <h3>شحن رصيد</h3>
+            <p style="font-size:11px;">حول للرقم: 09xxxxxxxx وصور الإشعار</p>
+            <input type="number" id="amt" placeholder="المبلغ">
+            <input type="file" id="receiptImg" accept="image/*">
+            <button class="btn main-btn" id="upBtn" onclick="requestDeposit()">إرسال الطلب</button>
         </div>
     </div>
 
     <div id="adminPage" class="page">
-        <div class="card" style="max-width: 500px;">
-            <h2>إدارة الطلبات والأسعار ⚙️</h2>
-            <div id="adminList" style="max-height: 400px; overflow-y: auto;"></div>
-            <hr>
-            <button class="btn main-btn" style="background:grey;" onclick="showPage('shopPage')">خروج من الإدارة</button>
+        <div class="card" style="max-width:500px;">
+            <h3>الإدارة والتحكم ⚙️</h3>
+            <div id="adminList" style="max-height:300px; overflow-y:auto; border-bottom:1px solid #444;"></div>
+            <div class="grid" style="margin-top:15px; font-size:11px;">
+                <div>60: <input type="number" id="new-60"></div>
+                <div>325: <input type="number" id="new-325"></div>
+                <div>660: <input type="number" id="new-660"></div>
+                <div>1800: <input type="number" id="new-1800"></div>
+            </div>
+            <button class="btn main-btn" onclick="updatePrices()">تحديث الأسعار</button>
+            <button class="btn" style="width:100%; margin-top:10px;" onclick="showPage('shopPage')">رجوع</button>
         </div>
+    </div>
+
+    <div class="nav-bar" id="bottomNav" style="display:none;">
+        <div class="nav-item active-nav" id="n1" onclick="showPage('shopPage'); setNav('n1')">🏠 المتجر</div>
+        <div class="nav-item" id="n2" onclick="showPage('ordersPage'); setNav('n2')">📦 طلباتي</div>
+        <div class="nav-item" id="n3" onclick="showPage('rechargePage'); setNav('n3')">💰 شحن</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCW-0rfJbFRV06tMVDHwpPNUL1grBLaYJU",
@@ -112,112 +128,109 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // تحويل الصورة لـ Base64 لتخزينها
-        async function toBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
+        // مراقبة طلبات المستخدم الحالي فقط
+        function watchUserOrders(user) {
+            const q = query(collection(db, "orders"), where("user", "==", user));
+            onSnapshot(q, (s) => {
+                const list = document.getElementById('userOrdersList'); list.innerHTML = "";
+                s.forEach(d => {
+                    const o = d.data();
+                    const statusText = o.status === 'pending' ? 'قيد الانتظار 🟡' : (o.status === 'done' ? 'تم القبول ✅' : 'مرفوض ❌');
+                    const div = document.createElement('div'); div.className = "card";
+                    div.style.textAlign = "right"; div.style.fontSize = "13px";
+                    div.innerHTML = `
+                        <b>الطلب:</b> ${o.details || o.amount + ' ل.س'}<br>
+                        <b>الحالة:</b> <span class="status-badge ${o.status}">${statusText}</span><br>
+                        ${o.note ? `<small style="color:var(--red)">ملاحظة: ${o.note}</small>` : ''}
+                    `;
+                    list.appendChild(div);
+                });
             });
         }
 
         window.requestDeposit = async () => {
             const amt = document.getElementById('amt').value;
             const file = document.getElementById('receiptImg').files[0];
-            if(!amt || !file) return alert("يرجى إدخال المبلغ وإرفاق صورة الإشعار");
-
-            document.getElementById('uploadBtn').innerText = "جاري الإرسال...";
-            const imgData = await toBase64(file);
-
-            await addDoc(collection(db, "orders"), { 
-                user: localStorage.getItem('activeUser'), 
-                type: 'إيداع', 
-                amount: parseInt(amt), 
-                receipt: imgData,
-                status: 'pending',
-                time: new Date().toLocaleString()
-            });
-
-            alert("تم إرسال الإشعار! بانتظار تأكيد المدير.");
-            document.getElementById('uploadBtn').innerText = "إرسال طلب الشحن";
-            showPage('shopPage');
+            if(!amt || !file) return alert("اكمل البيانات");
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = async () => {
+                await addDoc(collection(db, "orders"), { user: localStorage.getItem('activeUser'), type: 'إيداع', amount: parseInt(amt), receipt: reader.result, status: 'pending', time: Date.now() });
+                alert("تم إرسال الطلب!"); showPage('ordersPage'); setNav('n2');
+            };
         };
 
         window.loadAdmin = () => {
             onSnapshot(collection(db, "orders"), (s) => {
                 const list = document.getElementById('adminList'); list.innerHTML = "";
-                s.forEach((d) => {
+                s.forEach(d => {
                     const o = d.data(); if(o.status === 'pending') {
-                        const div = document.createElement('div');
-                        div.className = "card"; div.style.fontSize = "12px"; div.style.border = "1px solid #444";
-                        div.innerHTML = `
-                            <p>👤 <b>المستخدم:</b> ${o.user}</p>
-                            <p>💰 <b>المبلغ/الطلب:</b> ${o.amount || ''} ${o.details || ''}</p>
-                            <p>📅 <b>الوقت:</b> ${o.time || ''}</p>
-                            ${o.receipt ? `<p>🖼️ <b>صورة الإشعار:</b><br><img src="${o.receipt}" class="admin-img" onclick="window.open(this.src)"></p>` : ''}
-                            <div style="display:flex; gap:10px; margin-top:10px;">
-                                <button class="btn" style="flex:1; background:#2ecc71;" onclick="approve('${d.id}', '${o.user}', ${o.amount}, '${o.type}')">قبول ✅</button>
-                                <button class="btn" style="flex:1; background:#e74c3c;" onclick="reject('${d.id}', '${o.user}', ${o.amount}, '${o.type}')">رفض ❌</button>
-                            </div>
-                        `;
+                        const div = document.createElement('div'); div.style.borderBottom="1px solid #333"; div.style.padding="10px";
+                        div.innerHTML = `👤 ${o.user} | ${o.details || o.amount}<br>
+                        ${o.receipt ? `<img src="${o.receipt}" class="admin-img">` : ''}
+                        <button class="btn" style="background:var(--green); margin:5px;" onclick="approve('${d.id}','${o.user}',${o.amount},'${o.type}')">✅</button>
+                        <button class="btn" style="background:var(--red); margin:5px;" onclick="reject('${d.id}')">❌</button>`;
                         list.appendChild(div);
                     }
                 });
             });
         };
 
-        // بقية الدوال (Login, Purchase, etc.) تبقى ثابتة مع تحديث بسيط للأسعار
-        window.handleAuth = async (type) => {
-            const user = (type === 'login' ? document.getElementById('u').value : document.getElementById('ru').value).trim();
-            const pass = type === 'login' ? document.getElementById('p').value : document.getElementById('rp').value;
-            if(!user || !pass) return alert("اكمل البيانات");
-            const ref = doc(db, "users", user);
-            const snap = await getDoc(ref);
-            if(type === 'login') { if(snap.exists() && snap.data().pass === pass) login(user); else alert("خطأ في البيانات"); }
-            else { if(snap.exists()) alert("الاسم محجوز"); else { await setDoc(ref, { pass, balance: 0 }); login(user); } }
-        };
-        function login(user) {
-            localStorage.setItem('activeUser', user);
-            document.getElementById('curUser').innerText = user;
-            showPage('shopPage');
-            onSnapshot(doc(db, "users", user), (d) => { if(d.exists()) document.getElementById('balance').innerText = d.data().balance.toLocaleString(); });
-        }
-        window.processPurchase = async (item, priceID) => {
-            const priceText = document.getElementById(priceID).innerText;
-            const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-            const user = localStorage.getItem('activeUser');
-            const userRef = doc(db, "users", user);
-            const snap = await getDoc(userRef);
-            if(snap.data().balance < price) return alert("رصيدك ناقص!");
-            const playerID = prompt("أدخل ID اللاعب:");
-            if(!playerID) return;
-            await updateDoc(userRef, { balance: snap.data().balance - price });
-            await addDoc(collection(db, "orders"), { user, details: item + " لـ " + playerID, amount: price, type: 'شراء', status: 'pending', time: new Date().toLocaleString() });
-            alert("تم الخصم وبانتظار الشحن!");
-        };
         window.approve = async (oid, uid, amt, type) => {
             if(type === 'إيداع') { const r = doc(db, "users", uid); const s = await getDoc(r); await updateDoc(r, { balance: s.data().balance + amt }); }
             await updateDoc(doc(db, "orders", oid), { status: 'done' });
         };
-        window.reject = async (oid, uid, amt, type) => {
-            if(type === 'شراء') { const r = doc(db, "users", uid); const s = await getDoc(r); await updateDoc(r, { balance: s.data().balance + amt }); }
-            await deleteDoc(doc(db, "orders", oid));
+        window.reject = async (oid) => {
+            const note = prompt("سبب الرفض (اختياري):");
+            await updateDoc(doc(db, "orders", oid), { status: 'rejected', note: note || "" });
         };
-        window.checkAdmin = () => { if(prompt("كلمة سر الإدارة:") === "12362353339") { showPage('adminPage'); loadAdmin(); } };
-        window.toggleAuth = (isLogin) => { document.getElementById('loginBox').style.display = isLogin ? 'block' : 'none'; document.getElementById('registerBox').style.display = isLogin ? 'none' : 'block'; };
-        window.showPage = (id) => { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); };
-        window.switchGame = (game) => {
-            document.querySelectorAll('.game-section').forEach(s => s.style.display = 'none');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-            if(game === 'pubg') { document.getElementById('pubgSection').style.display = 'grid'; document.getElementById('pubgTab').classList.add('active-tab'); }
-            else { document.getElementById('ffSection').style.display = 'grid'; document.getElementById('ffTab').classList.add('active-tab'); }
+
+        window.handleAuth = async (t) => {
+            const u = (t==='login'?document.getElementById('u').value:document.getElementById('ru').value).trim();
+            const p = (t==='login'?document.getElementById('p').value:document.getElementById('rp').value);
+            if(!u || !p) return;
+            const ref = doc(db, "users", u); const s = await getDoc(ref);
+            if(t==='login'){ if(s.exists() && s.data().pass === p) login(u); else alert("خطأ"); }
+            else { if(s.exists()) alert("محجوز"); else { await setDoc(ref,{pass:p, balance:0}); login(u); } }
+        };
+        function login(u) {
+            localStorage.setItem('activeUser', u); document.getElementById('curUser').innerText = u;
+            document.getElementById('bottomNav').style.display = "flex";
+            showPage('shopPage'); watchUserOrders(u);
+            onSnapshot(doc(db, "users", u), (d) => { if(d.exists()) document.getElementById('balance').innerText = d.data().balance.toLocaleString(); });
+        }
+        window.processPurchase = async (i, pid) => {
+            const p = parseInt(document.getElementById(pid).innerText.replace(/[^0-9]/g,''));
+            const u = localStorage.getItem('activeUser'); const r = doc(db, "users", u); const s = await getDoc(r);
+            if(s.data().balance < p) return alert("رصيدك ناقص");
+            const id = prompt("ID اللاعب:"); if(!id) return;
+            await updateDoc(r, { balance: s.data().balance - p });
+            await addDoc(collection(db, "orders"), { user:u, details: i+" لـ "+id, amount: p, type: 'شراء', status: 'pending', time: Date.now() });
+            alert("تم إرسال طلب الشراء!"); showPage('ordersPage'); setNav('n2');
+        };
+        window.updatePrices = async () => {
+            await setDoc(doc(db, "settings", "prices"), {
+                p60: parseInt(document.getElementById('new-60').value) || 0,
+                p325: parseInt(document.getElementById('new-325').value) || 0,
+                p660: parseInt(document.getElementById('new-660').value) || 0,
+                p1800: parseInt(document.getElementById('new-1800').value) || 0,
+                p110ff: 0, p220ff: 0 // يمكن إضافتهم لاحقاً
+            });
+            alert("تم التحديث!");
+        };
+        window.checkAdmin = () => { if(prompt("كلمة السر:") === "12362353339") { showPage('adminPage'); loadAdmin(); } };
+        window.showPage = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); };
+        window.setNav = (id) => { document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active-nav')); document.getElementById(id).classList.add('active-nav'); };
+        window.switchGame = (g) => { 
+            document.getElementById('pubgSection').style.display = g==='pubg'?'grid':'none'; 
+            document.getElementById('ffSection').style.display = g==='ff'?'grid':'none';
+            document.getElementById('pTab').style.background = g==='pubg'? 'var(--gold)':'#1e293b';
+            document.getElementById('fTab').style.background = g==='ff'? 'var(--gold)':'#1e293b';
         };
         window.logout = () => { localStorage.removeItem('activeUser'); location.reload(); };
+        window.toggleAuth = (l) => { document.getElementById('loginBox').style.display = l?'block':'none'; document.getElementById('registerBox').style.display = l?'none':'block'; };
         onSnapshot(doc(db, "settings", "prices"), (d) => {
             if(d.exists()){
-                const p = d.data();
-                const ids = ['60','325','660','1800','110ff','220ff'];
+                const p = d.data(); const ids = ['60','325','660','1800'];
                 ids.forEach(i => { if(document.getElementById('price-'+i)) document.getElementById('price-'+i).innerText = (p['p'+i] || 0).toLocaleString() + " ل.س"; });
             }
         });
