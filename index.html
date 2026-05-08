@@ -16,7 +16,7 @@
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .card { background: var(--glass); padding: 25px; border-radius: 20px; margin: 15px auto; max-width: 380px; border: 1px solid rgba(255, 177, 0, 0.3); backdrop-filter: blur(15px); }
-        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; background: rgba(0,0,0,0.6); color: white; border: 1px solid var(--gold); text-align: center; }
+        input, select { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; background: rgba(0,0,0,0.6); color: white; border: 1px solid var(--gold); text-align: center; }
         .btn { color: black; padding: 12px 20px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
         .main-btn { background: linear-gradient(45deg, #ffb100, #ff8c00); width: 100%; margin-top: 10px; }
         .header { background: rgba(10,14,20,0.95); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
@@ -26,7 +26,7 @@
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .item { background: rgba(30, 41, 59, 0.7); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
         .logout-btn { background: var(--red); color: white; padding: 5px 10px; font-size: 12px; border-radius: 5px; }
-        .admin-section { border-top: 1px solid var(--gold); margin-top: 20px; padding-top: 15px; }
+        .admin-img { max-width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
@@ -51,9 +51,9 @@
 
     <div id="shopPage" class="page" style="padding:0;">
         <div class="header">
-            <div><span>👤 <span id="curUser"></span></span> <button class="logout-btn" onclick="logout()">خروج</button></div>
+            <div>👤 <span id="curUser"></span> <button class="logout-btn" onclick="logout()">خروج</button></div>
             <div style="text-align: left;"><span style="color:#2ecc71; font-weight:bold;"><span id="balance">0</span> ل.س</span><br>
-            <button onclick="showPage('rechargePage')" style="background:none; border:none; color:var(--gold); font-size: 11px;">+ شحن</button></div>
+            <button onclick="showPage('rechargePage')" style="background:none; border:none; color:var(--gold); font-size: 11px;">+ شحن رصيد</button></div>
         </div>
         <div style="padding: 20px;">
             <div class="tab-container">
@@ -70,39 +70,29 @@
                 <div class="item"><h4>110 جواهر</h4><p id="price-110ff">...</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('110 FF', 'price-110ff')">شراء</button></div>
                 <div class="item"><h4>220 جواهر</h4><p id="price-220ff">...</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('220 FF', 'price-220ff')">شراء</button></div>
             </div>
-            <p onclick="checkAdmin()" style="margin-top:40px; font-size:10px; opacity:0.3; cursor:pointer;">⚙️ الإدارة</p>
+            <p onclick="checkAdmin()" style="margin-top:40px; font-size:10px; opacity:0.3; cursor:pointer;">⚙️ لوحة التحكم</p>
         </div>
     </div>
 
     <div id="rechargePage" class="page">
         <div class="card">
-            <h3>تعبئة الرصيد</h3>
-            <img src="https://i.imgur.com/R9D6DsJ.jpeg" alt="QR Code" style="max-width:160px; border-radius:10px; margin-bottom:10px;">
-            <input type="number" id="amt" placeholder="المبلغ الذي حولته">
-            <button class="btn main-btn" onclick="requestDeposit()">تأكيد</button>
+            <h3>تعبئة الرصيد 💰</h3>
+            <p style="font-size: 12px; color: #ccc;">حول المبلغ للرقم الموضح وصور الإشعار</p>
+            <img src="https://i.imgur.com/R9D6DsJ.jpeg" alt="QR" style="max-width:150px; border-radius:10px; margin-bottom:10px;">
+            <input type="number" id="amt" placeholder="المبلغ المحول">
+            <label style="display: block; margin-top: 10px; font-size: 13px;">ارفق صورة الإشعار:</label>
+            <input type="file" id="receiptImg" accept="image/*" style="font-size: 12px;">
+            <button class="btn main-btn" id="uploadBtn" onclick="requestDeposit()">إرسال طلب الشحن</button>
             <button class="btn" style="background:none; color:white; margin-top:10px;" onclick="showPage('shopPage')">إلغاء</button>
         </div>
     </div>
 
     <div id="adminPage" class="page">
         <div class="card" style="max-width: 500px;">
-            <h2>الطلبات والأسعار ⚙️</h2>
-            <div id="adminList" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;"></div>
-            
-            <div class="admin-section">
-                <h4>تعديل الأسعار (ل.س)</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                    <div><label style="font-size: 10px;">60 UC</label><input type="number" id="new-60"></div>
-                    <div><label style="font-size: 10px;">325 UC</label><input type="number" id="new-325"></div>
-                    <div><label style="font-size: 10px;">660 UC</label><input type="number" id="new-660"></div>
-                    <div><label style="font-size: 10px;">1800 UC</label><input type="number" id="new-1800"></div>
-                    <div><label style="font-size: 10px;">110 FF</label><input type="number" id="new-110ff"></div>
-                    <div><label style="font-size: 10px;">220 FF</label><input type="number" id="new-220ff"></div>
-                </div>
-                <button class="btn main-btn" onclick="updateAllPrices()">تحديث الأسعار</button>
-            </div>
-            
-            <button class="btn main-btn" style="background:grey; margin-top: 10px;" onclick="showPage('shopPage')">إغلاق</button>
+            <h2>إدارة الطلبات والأسعار ⚙️</h2>
+            <div id="adminList" style="max-height: 400px; overflow-y: auto;"></div>
+            <hr>
+            <button class="btn main-btn" style="background:grey;" onclick="showPage('shopPage')">خروج من الإدارة</button>
         </div>
     </div>
 
@@ -122,60 +112,62 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        onSnapshot(doc(db, "settings", "prices"), (d) => {
-            if(d.exists()) {
-                const p = d.data();
-                const items = ['60', '325', '660', '1800', '110ff', '220ff'];
-                items.forEach(id => {
-                    const price = p['p' + id] || 0;
-                    document.getElementById('price-' + id).innerText = price.toLocaleString() + " ل.س";
-                    if(document.getElementById('new-' + id)) document.getElementById('new-' + id).value = price;
+        // تحويل الصورة لـ Base64 لتخزينها
+        async function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        window.requestDeposit = async () => {
+            const amt = document.getElementById('amt').value;
+            const file = document.getElementById('receiptImg').files[0];
+            if(!amt || !file) return alert("يرجى إدخال المبلغ وإرفاق صورة الإشعار");
+
+            document.getElementById('uploadBtn').innerText = "جاري الإرسال...";
+            const imgData = await toBase64(file);
+
+            await addDoc(collection(db, "orders"), { 
+                user: localStorage.getItem('activeUser'), 
+                type: 'إيداع', 
+                amount: parseInt(amt), 
+                receipt: imgData,
+                status: 'pending',
+                time: new Date().toLocaleString()
+            });
+
+            alert("تم إرسال الإشعار! بانتظار تأكيد المدير.");
+            document.getElementById('uploadBtn').innerText = "إرسال طلب الشحن";
+            showPage('shopPage');
+        };
+
+        window.loadAdmin = () => {
+            onSnapshot(collection(db, "orders"), (s) => {
+                const list = document.getElementById('adminList'); list.innerHTML = "";
+                s.forEach((d) => {
+                    const o = d.data(); if(o.status === 'pending') {
+                        const div = document.createElement('div');
+                        div.className = "card"; div.style.fontSize = "12px"; div.style.border = "1px solid #444";
+                        div.innerHTML = `
+                            <p>👤 <b>المستخدم:</b> ${o.user}</p>
+                            <p>💰 <b>المبلغ/الطلب:</b> ${o.amount || ''} ${o.details || ''}</p>
+                            <p>📅 <b>الوقت:</b> ${o.time || ''}</p>
+                            ${o.receipt ? `<p>🖼️ <b>صورة الإشعار:</b><br><img src="${o.receipt}" class="admin-img" onclick="window.open(this.src)"></p>` : ''}
+                            <div style="display:flex; gap:10px; margin-top:10px;">
+                                <button class="btn" style="flex:1; background:#2ecc71;" onclick="approve('${d.id}', '${o.user}', ${o.amount}, '${o.type}')">قبول ✅</button>
+                                <button class="btn" style="flex:1; background:#e74c3c;" onclick="reject('${d.id}', '${o.user}', ${o.amount}, '${o.type}')">رفض ❌</button>
+                            </div>
+                        `;
+                        list.appendChild(div);
+                    }
                 });
-            }
-        });
-
-        window.updateAllPrices = async () => {
-            const pRef = doc(db, "settings", "prices");
-            const data = {
-                p60: parseInt(document.getElementById('new-60').value) || 150,
-                p325: parseInt(document.getElementById('new-325').value) || 670,
-                p660: parseInt(document.getElementById('new-660').value) || 1300,
-                p1800: parseInt(document.getElementById('new-1800').value) || 2300,
-                p110ff: parseInt(document.getElementById('new-110ff').value) || 150,
-                p220ff: parseInt(document.getElementById('new-220ff').value) || 300
-            };
-            await setDoc(pRef, data);
-            alert("تم تحديث كافة الأسعار بنجاح!");
+            });
         };
 
-        window.processPurchase = async (item, priceID) => {
-            const priceText = document.getElementById(priceID).innerText;
-            const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-            const user = localStorage.getItem('activeUser');
-            const userRef = doc(db, "users", user);
-            const snap = await getDoc(userRef);
-            if(snap.data().balance < price) return alert("رصيدك غير كافٍ!");
-            const playerID = prompt("أدخل ID اللاعب:");
-            if(!playerID) return;
-            await updateDoc(userRef, { balance: snap.data().balance - price });
-            await addDoc(collection(db, "orders"), { user, details: item + " لـ " + playerID, amount: price, type: 'شراء', status: 'pending' });
-            alert("تم خصم الرصيد وإرسال الطلب!");
-        };
-
-        window.toggleAuth = (isLogin) => {
-            document.getElementById('loginBox').style.display = isLogin ? 'block' : 'none';
-            document.getElementById('registerBox').style.display = isLogin ? 'none' : 'block';
-        };
-        window.showPage = (id) => {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        };
-        window.switchGame = (game) => {
-            document.querySelectorAll('.game-section').forEach(s => s.style.display = 'none');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-            if(game === 'pubg') { document.getElementById('pubgSection').style.display = 'grid'; document.getElementById('pubgTab').classList.add('active-tab'); }
-            else { document.getElementById('ffSection').style.display = 'grid'; document.getElementById('ffTab').classList.add('active-tab'); }
-        };
+        // بقية الدوال (Login, Purchase, etc.) تبقى ثابتة مع تحديث بسيط للأسعار
         window.handleAuth = async (type) => {
             const user = (type === 'login' ? document.getElementById('u').value : document.getElementById('ru').value).trim();
             const pass = type === 'login' ? document.getElementById('p').value : document.getElementById('rp').value;
@@ -191,38 +183,44 @@
             showPage('shopPage');
             onSnapshot(doc(db, "users", user), (d) => { if(d.exists()) document.getElementById('balance').innerText = d.data().balance.toLocaleString(); });
         }
-        window.logout = () => { localStorage.removeItem('activeUser'); location.reload(); };
-        window.requestDeposit = async () => {
-            const amt = document.getElementById('amt').value;
-            if(!amt) return;
-            await addDoc(collection(db, "orders"), { user: localStorage.getItem('activeUser'), type: 'إيداع', amount: parseInt(amt), status: 'pending' });
-            alert("تم إرسال طلب الشحن!"); showPage('shopPage');
+        window.processPurchase = async (item, priceID) => {
+            const priceText = document.getElementById(priceID).innerText;
+            const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+            const user = localStorage.getItem('activeUser');
+            const userRef = doc(db, "users", user);
+            const snap = await getDoc(userRef);
+            if(snap.data().balance < price) return alert("رصيدك ناقص!");
+            const playerID = prompt("أدخل ID اللاعب:");
+            if(!playerID) return;
+            await updateDoc(userRef, { balance: snap.data().balance - price });
+            await addDoc(collection(db, "orders"), { user, details: item + " لـ " + playerID, amount: price, type: 'شراء', status: 'pending', time: new Date().toLocaleString() });
+            alert("تم الخصم وبانتظار الشحن!");
         };
-        window.checkAdmin = () => { if(prompt("كلمة سر المدير:") === "12362353339") { showPage('adminPage'); loadAdmin(); } };
-        function loadAdmin() {
-            onSnapshot(collection(db, "orders"), (s) => {
-                const list = document.getElementById('adminList'); list.innerHTML = "";
-                s.forEach((d) => {
-                    const o = d.data(); if(o.status === 'pending') {
-                        const div = document.createElement('div'); div.style.borderBottom = "1px solid gold"; div.style.padding = "10px";
-                        div.innerHTML = `<p style="font-size:11px;">👤 ${o.user}<br>📦 ${o.details || o.amount + ' ل.س'}</p>`;
-                        const b1 = document.createElement('button'); b1.innerText = '✅'; b1.className = 'btn'; b1.style.background = '#2ecc71';
-                        b1.onclick = () => approve(d.id, o.user, o.amount, o.type);
-                        const b2 = document.createElement('button'); b2.innerText = '❌'; b2.className = 'btn'; b2.style.background = '#e74c3c';
-                        b2.onclick = () => reject(d.id, o.user, o.amount, o.type);
-                        div.appendChild(b1); div.appendChild(b2); list.appendChild(div);
-                    }
-                });
-            });
-        }
-        async function approve(oid, uid, amt, type) {
+        window.approve = async (oid, uid, amt, type) => {
             if(type === 'إيداع') { const r = doc(db, "users", uid); const s = await getDoc(r); await updateDoc(r, { balance: s.data().balance + amt }); }
             await updateDoc(doc(db, "orders", oid), { status: 'done' });
-        }
-        async function reject(oid, uid, amt, type) {
+        };
+        window.reject = async (oid, uid, amt, type) => {
             if(type === 'شراء') { const r = doc(db, "users", uid); const s = await getDoc(r); await updateDoc(r, { balance: s.data().balance + amt }); }
             await deleteDoc(doc(db, "orders", oid));
-        }
+        };
+        window.checkAdmin = () => { if(prompt("كلمة سر الإدارة:") === "12362353339") { showPage('adminPage'); loadAdmin(); } };
+        window.toggleAuth = (isLogin) => { document.getElementById('loginBox').style.display = isLogin ? 'block' : 'none'; document.getElementById('registerBox').style.display = isLogin ? 'none' : 'block'; };
+        window.showPage = (id) => { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); };
+        window.switchGame = (game) => {
+            document.querySelectorAll('.game-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+            if(game === 'pubg') { document.getElementById('pubgSection').style.display = 'grid'; document.getElementById('pubgTab').classList.add('active-tab'); }
+            else { document.getElementById('ffSection').style.display = 'grid'; document.getElementById('ffTab').classList.add('active-tab'); }
+        };
+        window.logout = () => { localStorage.removeItem('activeUser'); location.reload(); };
+        onSnapshot(doc(db, "settings", "prices"), (d) => {
+            if(d.exists()){
+                const p = d.data();
+                const ids = ['60','325','660','1800','110ff','220ff'];
+                ids.forEach(i => { if(document.getElementById('price-'+i)) document.getElementById('price-'+i).innerText = (p['p'+i] || 0).toLocaleString() + " ل.س"; });
+            }
+        });
         const sv = localStorage.getItem('activeUser'); if(sv) login(sv);
     </script>
 </body>
