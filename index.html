@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر يوسف الخطيب 🪽</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyCW-0rfJbFRV06tMVDHwpPNUL1grBLaYJU",
+            authDomain: "alhakimstore-f420b.firebaseapp.com",
+            projectId: "alhakimstore-f420b",
+            storageBucket: "alhakimstore-f420b.firebasestorage.app",
+            messagingSenderId: "847782210556",
+            appId: "1:847782210556:web:9053a6725a8ecfcf18a079"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- وظائف الهوية ---
+        window.handleAuth = async (mode) => {
+            const user = document.getElementById(mode + '-user').value.trim();
+            const pass = document.getElementById(mode + '-pass').value;
+            
+            if(!user || !pass) return showMsg("يرجى ملء كافة الحقول", "#e74c3c");
+
+            const userRef = doc(db, "users", user);
+            const userSnap = await getDoc(userRef);
+
+            if (mode === 'signup') {
+                if (userSnap.exists()) return showMsg("اسم المستخدم موجود مسبقاً", "#e74c3c");
+                const phone = document.getElementById('signup-phone').value;
+                await setDoc(userRef, { pass, balance: 0, phone: phone || "غير مسجل" });
+                showMsg("تم إنشاء الحساب! جاري الدخول...", "#2ecc71");
+                setTimeout(() => login(user), 1500);
+            } else {
+                if (userSnap.exists() && userSnap.data().pass === pass) {
+                    login(user);
+                } else {
+                    showMsg("بيانات الدخول غير صحيحة", "#e74c3c");
+                }
+            }
+        };
+
+        function login(user) {
+            localStorage.setItem('activeYousefUser', user);
+            document.getElementById('displayUser').innerText = user;
+            showPage('shopPage');
+            listenToBalance(user);
+        }
+
+        function listenToBalance(user) {
+            onSnapshot(doc(db, "users", user), (doc) => {
+                if(doc.exists()) {
+                    document.getElementById('displayBalance').innerText = doc.data().balance.toLocaleString();
+                }
+            });
+        }
+
+        // --- نظام الطلبات ---
+        window.sendOrder = async (uc, price) => {
+            const user = localStorage.getItem('activeYousefUser');
+            const pID = prompt("أدخل ID اللاعب لببجي:");
+            if(!pID) return;
+            
+            const userRef = doc(db, "users", user);
+            const userSnap = await getDoc(userRef);
+            
+            if(userSnap.data().balance < price) return showMsg("رصيدك لا يكفي لشراء " + uc + " شدة", "#e74c3c");
+
+            await addDoc(collection(db, "orders"), {
+                user, type: 'شدات', details: `${uc} UC لـ ID: ${pID}`, amount: price, status: 'pending', time: Date.now()
+            });
+            showMsg("تم إرسال الطلب! سيتم التنفيذ قريباً", "#2ecc71");
+        };
+
+        window.requestDeposit = async () => {
+            const amt = document.getElementById('depAmt').value;
+            if(!amt || amt <= 0) return showMsg("أدخل مبلغاً صحيحاً", "#e74c3c");
+            await addDoc(collection(db, "orders"), {
+                user: localStorage.getItem('activeYousefUser'),
+                type: 'إيداع', details: `طلب شحن رصيد: ${amt} ل.س`, amount: parseInt(amt), status: 'pending', time: Date.now()
+            });
+            showMsg("تم إرسال طلب الإيداع", "#2ecc71");
+            showPage('shopPage');
+        };
+
+        function showMsg(txt, color) {
+            const m = document.getElementById('msg');
+            m.innerText = txt; m.style.background = color; m.style.display = 'block';
+            setTimeout(() => m.style.display = 'none', 3000);
+        }
+
+        // لوحة الإدارة
+        window.loadOrders = () => {
+            onSnapshot(collection(db, "orders"), (snap) => {
+                const list = document.getElementById('adminList');
+                list.innerHTML = "";
+                snap.forEach((d) => {
+                    const o = d.data();
+                    if(o.status === 'pending') {
+                        list.innerHTML += `<div class="card" style="border: 1px solid #f1c40f;">
+                            <p><b>👤 الزبون:</b> ${o.user}</p>
+                            <p><b>📝 الطلب:</b> ${o.details}</p>
+                            <p><b>💰 السعر:</b> ${o.amount} ل.س</p>
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn" style="background:#2ecc71; color:white;" onclick="approve('${d.id}','${o.user}',${o.amount},'${o.type}')">قبول</button>
+                                <button class="btn" style="background:#e74c3c; color:white;" onclick="updateDoc(doc(db,'orders','${d.id}'),{status:'rejected'})">رفض</button>
+                            </div>
+                        </div>`;
+                    }
+                });
+            });
+        };
+
+        window.approve = async (oid, uid, amt, type) => {
+            const uRef = doc(db, "users", uid);
+            const uSnap = await getDoc(uRef);
+            let currentBalance = uSnap.data().balance;
+            let newBalance = (type === 'إيداع') ? currentBalance + amt : currentBalance - amt;
+            
+            await updateDoc(uRef, { balance: newBalance });
+            await updateDoc(doc(db, "orders", oid), { status: 'done' });
+            showMsg("تم تنفيذ الطلب بنجاح", "#2ecc71");
+        };
+    </script>
+
+    <style>
+        :root { --gold: #f1c40f; --dark: #0f172a; --card: #1e293b; --green: #2ecc71; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; direction: rtl; }
+        .page { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .active { display: block; }
+        .card { background: var(--card); padding: 20px; border-radius: 20px; margin: 15px auto; max-width: 420px; border: 1px solid #334155; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        input { width: 90%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 16px; outline: none; }
+        input:focus { border-color: var(--gold); }
+        .btn { background: var(--gold); color: black; padding: 14px; border-radius: 12px; border: none; width: 100%; cursor: pointer; font-weight: bold; font-size:
