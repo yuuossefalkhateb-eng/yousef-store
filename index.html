@@ -4,13 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر يوسف الخطيب 🪽</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    
+    <style>
+        :root { --gold: #ffb100; --glass: rgba(15, 23, 42, 0.95); --red: #e74c3c; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: url('https://wallpaperaccess.com/full/1155026.jpg') no-repeat center center fixed; 
+            background-size: cover; color: white; text-align: center; margin: 0; min-height: 100vh; 
+        }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: -1; }
+        .page { display: none; padding: 20px; animation: fadeIn 0.4s; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { background: var(--glass); padding: 25px; border-radius: 20px; margin: 15px auto; max-width: 380px; border: 1px solid rgba(255, 177, 0, 0.3); backdrop-filter: blur(15px); }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; background: rgba(0,0,0,0.6); color: white; border: 1px solid var(--gold); text-align: center; }
+        .btn { color: black; padding: 12px 20px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
+        .main-btn { background: linear-gradient(45deg, #ffb100, #ff8c00); width: 100%; margin-top: 10px; }
+        .header { background: rgba(10,14,20,0.95); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .tab-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .tab-btn { background: #1e293b; color: white; flex: 1; padding: 15px; border-radius: 12px; border: 1px solid var(--gold); cursor: pointer; }
+        .tab-btn.active-tab { background: var(--gold); color: black; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .item { background: rgba(30, 41, 59, 0.7); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .logout-btn { background: var(--red); color: white; padding: 5px 10px; font-size: 12px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="authPage" class="page active">
+        <br><h1 style="color: var(--gold);">متجر يوسف الخطيب 🪽</h1>
+        <div class="card" id="loginBox">
+            <h3>تسجيل الدخول</h3>
+            <input type="text" id="u" placeholder="اسم المستخدم">
+            <input type="password" id="p" placeholder="كلمة السر">
+            <button class="btn main-btn" onclick="handleAuth('login')">دخول</button>
+            <p style="font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">ليس لديك حساب؟ <span style="color: var(--gold); cursor: pointer;">إنشاء حساب</span></p>
+        </div>
+        <div class="card" id="registerBox" style="display: none;">
+            <h3>إنشاء حساب جديد</h3>
+            <input type="text" id="ru" placeholder="اسم المستخدم">
+            <input type="password" id="rp" placeholder="كلمة السر">
+            <button class="btn main-btn" style="background: #2ecc71;" onclick="handleAuth('reg')">تأكيد الإنشاء</button>
+            <p style="font-size: 13px; margin-top: 15px;" onclick="toggleAuth(true)">لديك حساب؟ <span style="color: var(--gold); cursor: pointer;">دخول</span></p>
+        </div>
+    </div>
+
+    <div id="shopPage" class="page" style="padding:0;">
+        <div class="header">
+            <div><span>👤 <span id="curUser"></span></span> <button class="logout-btn" onclick="logout()">خروج</button></div>
+            <div style="text-align: left;"><span style="color:#2ecc71; font-weight:bold;"><span id="balance">0</span> ل.س</span><br>
+            <button onclick="showPage('rechargePage')" style="background:none; border:none; color:var(--gold); font-size: 11px;">+ شحن</button></div>
+        </div>
+        <div style="padding: 20px;">
+            <div class="tab-container">
+                <button id="pubgTab" class="tab-btn active-tab" onclick="switchGame('pubg')">PUBG Mobile</button>
+                <button id="ffTab" class="tab-btn" onclick="switchGame('ff')">Free Fire</button>
+            </div>
+            <div id="pubgSection" class="game-section grid">
+                <div class="item"><h4>60 UC</h4><p>150 ل.س</p><button class="btn main-btn" onclick="processPurchase('60 UC', 150)">شراء</button></div>
+                <div class="item"><h4>325 UC</h4><p>670 ل.س</p><button class="btn main-btn" onclick="processPurchase('325 UC', 670)">شراء</button></div>
+                <div class="item"><h4>660 UC</h4><p>1300 ل.س</p><button class="btn main-btn" onclick="processPurchase('660 UC', 1300)">شراء</button></div>
+                <div class="item"><h4>1800 UC</h4><p>2300 ل.س</p><button class="btn main-btn" onclick="processPurchase('1800 UC', 2300)">شراء</button></div>
+            </div>
+            <div id="ffSection" class="game-section grid" style="display: none;">
+                <div class="item"><h4>110 جواهر</h4><p>150 ل.س</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('110 جواهر FF', 150)">شراء</button></div>
+                <div class="item"><h4>220 جواهر</h4><p>300 ل.س</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('220 جواهر FF', 300)">شراء</button></div>
+            </div>
+            <p onclick="checkAdmin()" style="margin-top:40px; font-size:10px; opacity:0.3; cursor:pointer;">⚙️ الإدارة</p>
+        </div>
+    </div>
+
+    <div id="rechargePage" class="page">
+        <div class="card">
+            <h3>تعبئة الرصيد</h3>
+            <div style="background:white; padding:10px; border-radius:15px; display:inline-block; margin-bottom:10px;">
+                <img src="https://i.imgur.com/R9D6DsJ.jpeg" alt="QR Code" style="max-width:160px; border-radius:10px; display:block;">
+            </div>
+            <div style="background:black; padding:10px; border-radius:8px; color:var(--gold); font-size:11px; margin-bottom:10px; border:1px dashed var(--gold);">b597240f7f2ca485503f4e5fc39d1287</div>
+            <input type="number" id="amt" placeholder="المبلغ الذي حولته">
+            <button class="btn main-btn" onclick="requestDeposit()">تأكيد</button>
+            <button class="btn" style="background:none; color:white; margin-top:10px;" onclick="showPage('shopPage')">إلغاء</button>
+        </div>
+    </div>
+
+    <div id="adminPage" class="page">
+        <div class="card">
+            <h2>الطلبات ⚙️</h2>
+            <div id="adminList"></div>
+            <button class="btn main-btn" onclick="showPage('shopPage')">إغلاق</button>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyCW-0rfJbFRV06tMVDHwpPNUL1grBLaYJU",
             authDomain: "alhakimstore-f420b.firebaseapp.com",
@@ -23,121 +110,133 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- وظائف الهوية ---
-        window.handleAuth = async (mode) => {
-            const user = document.getElementById(mode + '-user').value.trim();
-            const pass = document.getElementById(mode + '-pass').value;
-            
-            if(!user || !pass) return showMsg("يرجى ملء كافة الحقول", "#e74c3c");
+        window.toggleAuth = (isLogin) => {
+            document.getElementById('loginBox').style.display = isLogin ? 'block' : 'none';
+            document.getElementById('registerBox').style.display = isLogin ? 'none' : 'block';
+        };
 
-            const userRef = doc(db, "users", user);
-            const userSnap = await getDoc(userRef);
+        window.showPage = (id) => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        };
 
-            if (mode === 'signup') {
-                if (userSnap.exists()) return showMsg("اسم المستخدم موجود مسبقاً", "#e74c3c");
-                const phone = document.getElementById('signup-phone').value;
-                await setDoc(userRef, { pass, balance: 0, phone: phone || "غير مسجل" });
-                showMsg("تم إنشاء الحساب! جاري الدخول...", "#2ecc71");
-                setTimeout(() => login(user), 1500);
+        window.switchGame = (game) => {
+            document.querySelectorAll('.game-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+            if(game === 'pubg') { document.getElementById('pubgSection').style.display = 'grid'; document.getElementById('pubgTab').classList.add('active-tab'); }
+            else { document.getElementById('ffSection').style.display = 'grid'; document.getElementById('ffTab').classList.add('active-tab'); }
+        };
+
+        window.handleAuth = async (type) => {
+            const user = (type === 'login' ? document.getElementById('u').value : document.getElementById('ru').value).trim();
+            const pass = type === 'login' ? document.getElementById('p').value : document.getElementById('rp').value;
+            if(!user || !pass) return alert("اكمل البيانات");
+            const ref = doc(db, "users", user);
+            const snap = await getDoc(ref);
+            if(type === 'login') {
+                if(snap.exists() && snap.data().pass === pass) login(user);
+                else alert("خطأ في البيانات");
             } else {
-                if (userSnap.exists() && userSnap.data().pass === pass) {
-                    login(user);
-                } else {
-                    showMsg("بيانات الدخول غير صحيحة", "#e74c3c");
-                }
+                if(snap.exists()) alert("الاسم محجوز");
+                else { await setDoc(ref, { pass, balance: 0 }); login(user); }
             }
         };
 
         function login(user) {
-            localStorage.setItem('activeYousefUser', user);
-            document.getElementById('displayUser').innerText = user;
+            localStorage.setItem('activeUser', user);
+            document.getElementById('curUser').innerText = user;
             showPage('shopPage');
-            listenToBalance(user);
-        }
-
-        function listenToBalance(user) {
-            onSnapshot(doc(db, "users", user), (doc) => {
-                if(doc.exists()) {
-                    document.getElementById('displayBalance').innerText = doc.data().balance.toLocaleString();
-                }
+            onSnapshot(doc(db, "users", user), (d) => {
+                if(d.exists()) document.getElementById('balance').innerText = d.data().balance.toLocaleString();
             });
         }
 
-        // --- نظام الطلبات ---
-        window.sendOrder = async (uc, price) => {
-            const user = localStorage.getItem('activeYousefUser');
-            const pID = prompt("أدخل ID اللاعب لببجي:");
-            if(!pID) return;
-            
+        window.logout = () => { localStorage.removeItem('activeUser'); location.reload(); };
+
+        // نظام الخصم الفوري عند الطلب
+        window.processPurchase = async (details, price) => {
+            const user = localStorage.getItem('activeUser');
             const userRef = doc(db, "users", user);
-            const userSnap = await getDoc(userRef);
+            const snap = await getDoc(userRef);
             
-            if(userSnap.data().balance < price) return showMsg("رصيدك لا يكفي لشراء " + uc + " شدة", "#e74c3c");
+            if(snap.data().balance < price) return alert("رصيدك غير كافٍ!");
+            
+            const playerID = prompt("أدخل ID اللاعب:");
+            if(!playerID) return;
 
-            await addDoc(collection(db, "orders"), {
-                user, type: 'شدات', details: `${uc} UC لـ ID: ${pID}`, amount: price, status: 'pending', time: Date.now()
+            // خصم الرصيد فوراً من الزبون
+            const newBalance = snap.data().balance - price;
+            await updateDoc(userRef, { balance: newBalance });
+
+            // إرسال الطلب للإدارة
+            await addDoc(collection(db, "orders"), { 
+                user, details: details + " لـ " + playerID, amount: price, type: 'شراء', status: 'pending' 
             });
-            showMsg("تم إرسال الطلب! سيتم التنفيذ قريباً", "#2ecc71");
+            alert("تم خصم الرصيد وإرسال طلبك للمدير!");
         };
 
         window.requestDeposit = async () => {
-            const amt = document.getElementById('depAmt').value;
-            if(!amt || amt <= 0) return showMsg("أدخل مبلغاً صحيحاً", "#e74c3c");
-            await addDoc(collection(db, "orders"), {
-                user: localStorage.getItem('activeYousefUser'),
-                type: 'إيداع', details: `طلب شحن رصيد: ${amt} ل.س`, amount: parseInt(amt), status: 'pending', time: Date.now()
+            const amt = document.getElementById('amt').value;
+            if(!amt) return;
+            await addDoc(collection(db, "orders"), { 
+                user: localStorage.getItem('activeUser'), type: 'إيداع', amount: parseInt(amt), status: 'pending' 
             });
-            showMsg("تم إرسال طلب الإيداع", "#2ecc71");
+            alert("تم إرسال طلب الشحن!");
             showPage('shopPage');
         };
 
-        function showMsg(txt, color) {
-            const m = document.getElementById('msg');
-            m.innerText = txt; m.style.background = color; m.style.display = 'block';
-            setTimeout(() => m.style.display = 'none', 3000);
-        }
+        window.checkAdmin = () => {
+            if(prompt("كلمة سر المدير:") === "12362353339") { showPage('adminPage'); loadAdmin(); }
+        };
 
-        // لوحة الإدارة
-        window.loadOrders = () => {
-            onSnapshot(collection(db, "orders"), (snap) => {
+        function loadAdmin() {
+            onSnapshot(collection(db, "orders"), (s) => {
                 const list = document.getElementById('adminList');
                 list.innerHTML = "";
-                snap.forEach((d) => {
+                s.forEach((d) => {
                     const o = d.data();
                     if(o.status === 'pending') {
-                        list.innerHTML += `<div class="card" style="border: 1px solid #f1c40f;">
-                            <p><b>👤 الزبون:</b> ${o.user}</p>
-                            <p><b>📝 الطلب:</b> ${o.details}</p>
-                            <p><b>💰 السعر:</b> ${o.amount} ل.س</p>
-                            <div style="display:flex; gap:10px;">
-                                <button class="btn" style="background:#2ecc71; color:white;" onclick="approve('${d.id}','${o.user}',${o.amount},'${o.type}')">قبول</button>
-                                <button class="btn" style="background:#e74c3c; color:white;" onclick="updateDoc(doc(db,'orders','${d.id}'),{status:'rejected'})">رفض</button>
-                            </div>
-                        </div>`;
+                        const div = document.createElement('div');
+                        div.style.borderBottom = "1px solid gold"; div.style.padding = "10px";
+                        div.innerHTML = `<p style="font-size:12px;">👤 ${o.user}<br>📦 ${o.details || o.amount + ' ل.س'}</p>`;
+                        
+                        const b1 = document.createElement('button');
+                        b1.innerText = '✅'; b1.className = 'btn'; b1.style.background = '#2ecc71';
+                        b1.onclick = () => approve(d.id, o.user, o.amount, o.type);
+                        
+                        const b2 = document.createElement('button');
+                        b2.innerText = '❌'; b2.className = 'btn'; b2.style.background = '#e74c3c';
+                        b2.onclick = () => reject(d.id, o.user, o.amount, o.type);
+                        
+                        div.appendChild(b1); div.appendChild(b2);
+                        list.appendChild(div);
                     }
                 });
             });
-        };
+        }
 
-        window.approve = async (oid, uid, amt, type) => {
-            const uRef = doc(db, "users", uid);
-            const uSnap = await getDoc(uRef);
-            let currentBalance = uSnap.data().balance;
-            let newBalance = (type === 'إيداع') ? currentBalance + amt : currentBalance - amt;
-            
-            await updateDoc(uRef, { balance: newBalance });
-            await updateDoc(doc(db, "orders", oid), { status: 'done' });
-            showMsg("تم تنفيذ الطلب بنجاح", "#2ecc71");
-        };
+        async function approve(orderID, uid, amt, type) {
+            if(type === 'إيداع') {
+                const ref = doc(db, "users", uid);
+                const s = await getDoc(ref);
+                await updateDoc(ref, { balance: s.data().balance + amt });
+            }
+            await updateDoc(doc(db, "orders", orderID), { status: 'done' });
+        }
+
+        async function reject(orderID, uid, amt, type) {
+            // إذا كان طلب شراء، نعيد الرصيد للزبون لأنه خُصم منه عند الضغط
+            if(type === 'شراء') {
+                const ref = doc(db, "users", uid);
+                const s = await getDoc(ref);
+                await updateDoc(ref, { balance: s.data().balance + amt });
+                alert("تم رفض الطلب وإعادة الرصيد للزبون");
+            }
+            await deleteDoc(doc(db, "orders", orderID));
+        }
+
+        const savedUser = localStorage.getItem('activeUser');
+        if(savedUser) login(savedUser);
     </script>
-
-    <style>
-        :root { --gold: #f1c40f; --dark: #0f172a; --card: #1e293b; --green: #2ecc71; }
-        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; direction: rtl; }
-        .page { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .active { display: block; }
-        .card { background: var(--card); padding: 20px; border-radius: 20px; margin: 15px auto; max-width: 420px; border: 1px solid #334155; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
-        input { width: 90%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 16px; outline: none; }
-        input:focus { border-color: var(--gold); }
-        .btn { background: var(--gold); color: black; padding: 14px; border-radius: 12px; border: none; width: 100%; cursor: pointer; font-weight: bold; font-size:
+</body>
+</html>
