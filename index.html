@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر يوسف الخطيب 🪽</title>
+    <title>متجر يـ,ـۅسـ,ـفـ,ـ 𝐾ℎ_7</title>
     <style>
         :root { --gold: #ffb100; --glass: rgba(15, 23, 42, 0.95); --red: #e74c3c; }
         body { 
@@ -21,17 +21,18 @@
         .main-btn { background: linear-gradient(45deg, #ffb100, #ff8c00); width: 100%; margin-top: 10px; }
         .header { background: rgba(10,14,20,0.95); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
         .tab-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .tab-btn { background: #1e293b; color: white; flex: 1; padding: 15px; border-radius: 12px; border: 1px solid var(--gold); cursor: pointer; }
+        .tab-btn { background: #1e293b; color: white; flex: 1; padding: 15px; border-radius: 12px; border: 1px solid var(--gold); cursor: pointer; font-size: 14px; }
         .tab-btn.active-tab { background: var(--gold); color: black; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .item { background: rgba(30, 41, 59, 0.7); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
         .logout-btn { background: var(--red); color: white; padding: 5px 10px; font-size: 12px; border-radius: 5px; }
+        .admin-section { border-top: 1px solid var(--gold); margin-top: 20px; padding-top: 15px; }
     </style>
 </head>
 <body>
 
     <div id="authPage" class="page active">
-        <br><h1 style="color: var(--gold);">متجر يوسف الخطيب 🪽</h1>
+        <br><h1 style="color: var(--gold);">يـ,ـۅسـ,ـفـ,ـ 𝐾ℎ_7</h1>
         <div class="card" id="loginBox">
             <h3>تسجيل الدخول</h3>
             <input type="text" id="u" placeholder="اسم المستخدم">
@@ -60,14 +61,14 @@
                 <button id="ffTab" class="tab-btn" onclick="switchGame('ff')">Free Fire</button>
             </div>
             <div id="pubgSection" class="game-section grid">
-                <div class="item"><h4>60 UC</h4><p>150 ل.س</p><button class="btn main-btn" onclick="processPurchase('60 UC', 150)">شراء</button></div>
-                <div class="item"><h4>325 UC</h4><p>670 ل.س</p><button class="btn main-btn" onclick="processPurchase('325 UC', 670)">شراء</button></div>
-                <div class="item"><h4>660 UC</h4><p>1300 ل.س</p><button class="btn main-btn" onclick="processPurchase('660 UC', 1300)">شراء</button></div>
-                <div class="item"><h4>1800 UC</h4><p>2300 ل.س</p><button class="btn main-btn" onclick="processPurchase('1800 UC', 2300)">شراء</button></div>
+                <div class="item"><h4>60 UC</h4><p id="price-60">...</p><button class="btn main-btn" onclick="processPurchase('60 UC', 'price-60')">شراء</button></div>
+                <div class="item"><h4>325 UC</h4><p id="price-325">...</p><button class="btn main-btn" onclick="processPurchase('325 UC', 'price-325')">شراء</button></div>
+                <div class="item"><h4>660 UC</h4><p id="price-660">...</p><button class="btn main-btn" onclick="processPurchase('660 UC', 'price-660')">شراء</button></div>
+                <div class="item"><h4>1800 UC</h4><p id="price-1800">...</p><button class="btn main-btn" onclick="processPurchase('1800 UC', 'price-1800')">شراء</button></div>
             </div>
             <div id="ffSection" class="game-section grid" style="display: none;">
-                <div class="item"><h4>110 جواهر</h4><p>150 ل.س</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('110 جواهر FF', 150)">شراء</button></div>
-                <div class="item"><h4>220 جواهر</h4><p>300 ل.س</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('220 جواهر FF', 300)">شراء</button></div>
+                <div class="item"><h4>110 جواهر</h4><p id="price-110ff">...</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('110 FF', 'price-110ff')">شراء</button></div>
+                <div class="item"><h4>220 جواهر</h4><p id="price-220ff">...</p><button class="btn main-btn" style="background:#3498db;" onclick="processPurchase('220 FF', 'price-220ff')">شراء</button></div>
             </div>
             <p onclick="checkAdmin()" style="margin-top:40px; font-size:10px; opacity:0.3; cursor:pointer;">⚙️ الإدارة</p>
         </div>
@@ -76,10 +77,7 @@
     <div id="rechargePage" class="page">
         <div class="card">
             <h3>تعبئة الرصيد</h3>
-            <div style="background:white; padding:10px; border-radius:15px; display:inline-block; margin-bottom:10px;">
-                <img src="https://i.imgur.com/R9D6DsJ.jpeg" alt="QR Code" style="max-width:160px; border-radius:10px; display:block;">
-            </div>
-            <div style="background:black; padding:10px; border-radius:8px; color:var(--gold); font-size:11px; margin-bottom:10px; border:1px dashed var(--gold);">b597240f7f2ca485503f4e5fc39d1287</div>
+            <img src="https://i.imgur.com/R9D6DsJ.jpeg" alt="QR Code" style="max-width:160px; border-radius:10px; margin-bottom:10px;">
             <input type="number" id="amt" placeholder="المبلغ الذي حولته">
             <button class="btn main-btn" onclick="requestDeposit()">تأكيد</button>
             <button class="btn" style="background:none; color:white; margin-top:10px;" onclick="showPage('shopPage')">إلغاء</button>
@@ -87,10 +85,24 @@
     </div>
 
     <div id="adminPage" class="page">
-        <div class="card">
-            <h2>الطلبات ⚙️</h2>
-            <div id="adminList"></div>
-            <button class="btn main-btn" onclick="showPage('shopPage')">إغلاق</button>
+        <div class="card" style="max-width: 500px;">
+            <h2>الطلبات والأسعار ⚙️</h2>
+            <div id="adminList" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;"></div>
+            
+            <div class="admin-section">
+                <h4>تعديل الأسعار (ل.س)</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                    <div><label style="font-size: 10px;">60 UC</label><input type="number" id="new-60"></div>
+                    <div><label style="font-size: 10px;">325 UC</label><input type="number" id="new-325"></div>
+                    <div><label style="font-size: 10px;">660 UC</label><input type="number" id="new-660"></div>
+                    <div><label style="font-size: 10px;">1800 UC</label><input type="number" id="new-1800"></div>
+                    <div><label style="font-size: 10px;">110 FF</label><input type="number" id="new-110ff"></div>
+                    <div><label style="font-size: 10px;">220 FF</label><input type="number" id="new-220ff"></div>
+                </div>
+                <button class="btn main-btn" onclick="updateAllPrices()">تحديث الأسعار</button>
+            </div>
+            
+            <button class="btn main-btn" style="background:grey; margin-top: 10px;" onclick="showPage('shopPage')">إغلاق</button>
         </div>
     </div>
 
@@ -110,133 +122,108 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        onSnapshot(doc(db, "settings", "prices"), (d) => {
+            if(d.exists()) {
+                const p = d.data();
+                const items = ['60', '325', '660', '1800', '110ff', '220ff'];
+                items.forEach(id => {
+                    const price = p['p' + id] || 0;
+                    document.getElementById('price-' + id).innerText = price.toLocaleString() + " ل.س";
+                    if(document.getElementById('new-' + id)) document.getElementById('new-' + id).value = price;
+                });
+            }
+        });
+
+        window.updateAllPrices = async () => {
+            const pRef = doc(db, "settings", "prices");
+            const data = {
+                p60: parseInt(document.getElementById('new-60').value) || 150,
+                p325: parseInt(document.getElementById('new-325').value) || 670,
+                p660: parseInt(document.getElementById('new-660').value) || 1300,
+                p1800: parseInt(document.getElementById('new-1800').value) || 2300,
+                p110ff: parseInt(document.getElementById('new-110ff').value) || 150,
+                p220ff: parseInt(document.getElementById('new-220ff').value) || 300
+            };
+            await setDoc(pRef, data);
+            alert("تم تحديث كافة الأسعار بنجاح!");
+        };
+
+        window.processPurchase = async (item, priceID) => {
+            const priceText = document.getElementById(priceID).innerText;
+            const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+            const user = localStorage.getItem('activeUser');
+            const userRef = doc(db, "users", user);
+            const snap = await getDoc(userRef);
+            if(snap.data().balance < price) return alert("رصيدك غير كافٍ!");
+            const playerID = prompt("أدخل ID اللاعب:");
+            if(!playerID) return;
+            await updateDoc(userRef, { balance: snap.data().balance - price });
+            await addDoc(collection(db, "orders"), { user, details: item + " لـ " + playerID, amount: price, type: 'شراء', status: 'pending' });
+            alert("تم خصم الرصيد وإرسال الطلب!");
+        };
+
         window.toggleAuth = (isLogin) => {
             document.getElementById('loginBox').style.display = isLogin ? 'block' : 'none';
             document.getElementById('registerBox').style.display = isLogin ? 'none' : 'block';
         };
-
         window.showPage = (id) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         };
-
         window.switchGame = (game) => {
             document.querySelectorAll('.game-section').forEach(s => s.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
             if(game === 'pubg') { document.getElementById('pubgSection').style.display = 'grid'; document.getElementById('pubgTab').classList.add('active-tab'); }
             else { document.getElementById('ffSection').style.display = 'grid'; document.getElementById('ffTab').classList.add('active-tab'); }
         };
-
         window.handleAuth = async (type) => {
             const user = (type === 'login' ? document.getElementById('u').value : document.getElementById('ru').value).trim();
             const pass = type === 'login' ? document.getElementById('p').value : document.getElementById('rp').value;
             if(!user || !pass) return alert("اكمل البيانات");
             const ref = doc(db, "users", user);
             const snap = await getDoc(ref);
-            if(type === 'login') {
-                if(snap.exists() && snap.data().pass === pass) login(user);
-                else alert("خطأ في البيانات");
-            } else {
-                if(snap.exists()) alert("الاسم محجوز");
-                else { await setDoc(ref, { pass, balance: 0 }); login(user); }
-            }
+            if(type === 'login') { if(snap.exists() && snap.data().pass === pass) login(user); else alert("خطأ في البيانات"); }
+            else { if(snap.exists()) alert("الاسم محجوز"); else { await setDoc(ref, { pass, balance: 0 }); login(user); } }
         };
-
         function login(user) {
             localStorage.setItem('activeUser', user);
             document.getElementById('curUser').innerText = user;
             showPage('shopPage');
-            onSnapshot(doc(db, "users", user), (d) => {
-                if(d.exists()) document.getElementById('balance').innerText = d.data().balance.toLocaleString();
-            });
+            onSnapshot(doc(db, "users", user), (d) => { if(d.exists()) document.getElementById('balance').innerText = d.data().balance.toLocaleString(); });
         }
-
         window.logout = () => { localStorage.removeItem('activeUser'); location.reload(); };
-
-        // نظام الخصم الفوري عند الطلب
-        window.processPurchase = async (details, price) => {
-            const user = localStorage.getItem('activeUser');
-            const userRef = doc(db, "users", user);
-            const snap = await getDoc(userRef);
-            
-            if(snap.data().balance < price) return alert("رصيدك غير كافٍ!");
-            
-            const playerID = prompt("أدخل ID اللاعب:");
-            if(!playerID) return;
-
-            // خصم الرصيد فوراً من الزبون
-            const newBalance = snap.data().balance - price;
-            await updateDoc(userRef, { balance: newBalance });
-
-            // إرسال الطلب للإدارة
-            await addDoc(collection(db, "orders"), { 
-                user, details: details + " لـ " + playerID, amount: price, type: 'شراء', status: 'pending' 
-            });
-            alert("تم خصم الرصيد وإرسال طلبك للمدير!");
-        };
-
         window.requestDeposit = async () => {
             const amt = document.getElementById('amt').value;
             if(!amt) return;
-            await addDoc(collection(db, "orders"), { 
-                user: localStorage.getItem('activeUser'), type: 'إيداع', amount: parseInt(amt), status: 'pending' 
-            });
-            alert("تم إرسال طلب الشحن!");
-            showPage('shopPage');
+            await addDoc(collection(db, "orders"), { user: localStorage.getItem('activeUser'), type: 'إيداع', amount: parseInt(amt), status: 'pending' });
+            alert("تم إرسال طلب الشحن!"); showPage('shopPage');
         };
-
-        window.checkAdmin = () => {
-            if(prompt("كلمة سر المدير:") === "12362353339") { showPage('adminPage'); loadAdmin(); }
-        };
-
+        window.checkAdmin = () => { if(prompt("كلمة سر المدير:") === "12362353339") { showPage('adminPage'); loadAdmin(); } };
         function loadAdmin() {
             onSnapshot(collection(db, "orders"), (s) => {
-                const list = document.getElementById('adminList');
-                list.innerHTML = "";
+                const list = document.getElementById('adminList'); list.innerHTML = "";
                 s.forEach((d) => {
-                    const o = d.data();
-                    if(o.status === 'pending') {
-                        const div = document.createElement('div');
-                        div.style.borderBottom = "1px solid gold"; div.style.padding = "10px";
-                        div.innerHTML = `<p style="font-size:12px;">👤 ${o.user}<br>📦 ${o.details || o.amount + ' ل.س'}</p>`;
-                        
-                        const b1 = document.createElement('button');
-                        b1.innerText = '✅'; b1.className = 'btn'; b1.style.background = '#2ecc71';
+                    const o = d.data(); if(o.status === 'pending') {
+                        const div = document.createElement('div'); div.style.borderBottom = "1px solid gold"; div.style.padding = "10px";
+                        div.innerHTML = `<p style="font-size:11px;">👤 ${o.user}<br>📦 ${o.details || o.amount + ' ل.س'}</p>`;
+                        const b1 = document.createElement('button'); b1.innerText = '✅'; b1.className = 'btn'; b1.style.background = '#2ecc71';
                         b1.onclick = () => approve(d.id, o.user, o.amount, o.type);
-                        
-                        const b2 = document.createElement('button');
-                        b2.innerText = '❌'; b2.className = 'btn'; b2.style.background = '#e74c3c';
+                        const b2 = document.createElement('button'); b2.innerText = '❌'; b2.className = 'btn'; b2.style.background = '#e74c3c';
                         b2.onclick = () => reject(d.id, o.user, o.amount, o.type);
-                        
-                        div.appendChild(b1); div.appendChild(b2);
-                        list.appendChild(div);
+                        div.appendChild(b1); div.appendChild(b2); list.appendChild(div);
                     }
                 });
             });
         }
-
-        async function approve(orderID, uid, amt, type) {
-            if(type === 'إيداع') {
-                const ref = doc(db, "users", uid);
-                const s = await getDoc(ref);
-                await updateDoc(ref, { balance: s.data().balance + amt });
-            }
-            await updateDoc(doc(db, "orders", orderID), { status: 'done' });
+        async function approve(oid, uid, amt, type) {
+            if(type === 'إيداع') { const r = doc(db, "users", uid); const s = await getDoc(r); await updateDoc(r, { balance: s.data().balance + amt }); }
+            await updateDoc(doc(db, "orders", oid), { status: 'done' });
         }
-
-        async function reject(orderID, uid, amt, type) {
-            // إذا كان طلب شراء، نعيد الرصيد للزبون لأنه خُصم منه عند الضغط
-            if(type === 'شراء') {
-                const ref = doc(db, "users", uid);
-                const s = await getDoc(ref);
-                await updateDoc(ref, { balance: s.data().balance + amt });
-                alert("تم رفض الطلب وإعادة الرصيد للزبون");
-            }
-            await deleteDoc(doc(db, "orders", orderID));
+        async function reject(oid, uid, amt, type) {
+            if(type === 'شراء') { const r = doc(db, "users", uid); const s = await getDoc(r); await updateDoc(r, { balance: s.data().balance + amt }); }
+            await deleteDoc(doc(db, "orders", oid));
         }
-
-        const savedUser = localStorage.getItem('activeUser');
-        if(savedUser) login(savedUser);
+        const sv = localStorage.getItem('activeUser'); if(sv) login(sv);
     </script>
 </body>
 </html>
